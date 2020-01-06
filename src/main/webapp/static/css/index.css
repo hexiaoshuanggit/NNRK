@@ -1,0 +1,42 @@
+.grid4read  .x-grid-cell{
+	background-color: #c0c0c0;
+}
+.grid4high .x-grid-cell{
+	background-color: red;
+}
+.grid4midd  .x-grid-cell{
+	background-color: yellow;
+}
+.grid4low  .x-grid-cell{
+	background-color: orange;
+}
+.griddispacth  .x-grid-cell{
+	background-color: #00B0F0;
+	font-size : 25px;
+	color : white;
+	line-height: 35px;
+}
+.gridsdhcqs  .x-grid-cell{
+	background-color: #16365C;
+	font-size : 25px;
+	color : white;
+	line-height: 35px;
+}
+tr.x-grid-record-green .x-grid-td { background: #00ff90 }
+ .customer0001 {
+	cursor: pointer;
+}
+.x-tab-default-active .x-tab-inner {
+	color : green;
+}
+
+.x-panel-header-new {
+    background-image: none;
+    background-color: #35BAF6;
+}
+
+.grid4print .x-grid-cell{
+	background-color: #E3B38B;
+}
+
+

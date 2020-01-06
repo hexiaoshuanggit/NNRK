@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:aop="http://www.springframework.org/schema/aop" 
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:task="http://www.springframework.org/schema/task"
+	xmlns:websocket="http://www.springframework.org/schema/websocket"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+                     http://www.springframework.org/schema/beans/spring-beans-4.3.xsd
+                     http://www.springframework.org/schema/context
+                     http://www.springframework.org/schema/context/spring-context-4.3.xsd
+                     http://www.springframework.org/schema/aop
+                     http://www.springframework.org/schema/aop/spring-aop-4.3.xsd
+                     http://www.springframework.org/schema/task
+                     http://www.springframework.org/schema/task/spring-task-4.3.xsd
+                     http://www.springframework.org/schema/tx
+                     http://www.springframework.org/schema/tx/spring-tx-4.3.xsd">
+                     
+	<context:annotation-config />
+	<aop:aspectj-autoproxy proxy-target-class="true"></aop:aspectj-autoproxy>
+	<context:component-scan base-package="mesrk"></context:component-scan>
+	
+    <task:annotation-driven executor="asyncExecutor" />
+    <task:executor id="asyncExecutor" pool-size="10-150" queue-capacity="15"/>
+	
+	<bean id="dataSource"  class="com.alibaba.druid.pool.DruidDataSource"  init-method="init" destroy-method="close">
+		<property name="driverClassName" value="net.sourceforge.jtds.jdbc.Driver"/>
+		<property name="url" value="jdbc:jtds:sqlserver://106.14.58.82:1433/NN_PROJECT"/>
+		<property name="username" value="sa"/>
+		<property name="password" value="rksa"/>
+		<property name="initialSize" value="2"></property>
+		<property name="maxActive" value="3"></property>
+		<property name="minIdle" value="2"></property>
+		<property name="testOnBorrow" value="true"></property>
+   		<property name="validationQuery" value="SELECT 1"></property>
+   		<property name="removeAbandoned"  value="true" ></property>
+		<property name="removeAbandonedTimeout" value="1800"></property>
+		<property name="maxWait" value="10000"></property>
+ 	</bean>	
+ 	
+	<bean id="sessionFactory"
+		class="org.springframework.orm.hibernate4.LocalSessionFactoryBean">
+		<property name="dataSource" ref="dataSource"></property>
+		<property name="hibernateProperties">
+			<value>
+				hibernate.generate_statistics=false
+				hibernate.dialect= org.hibernate.dialect.SQLServerDialect
+				hibernate.show_sql= false
+				hibernate.format_sql= false
+				hibernate.cache.use_second_level_cache=true
+                hibernate.cache.use_query_cache=true
+                hibernate.cache.region.factory_class=org.hibernate.cache.ehcache.EhCacheRegionFactory
+                hibernate.net.sf.ehcache.configurationResourceName=/ehcache.xml
+				hibernate.jdbc.fetch_size=50
+				hibernate.jdbc.batch_size=50
+				hibernate.current_session_context_class=org.springframework.orm.hibernate4.SpringSessionContext
+				javax.persistence.validation.mode=none
+			</value>
+		</property>
+		<property name="mappingResources">
+		    <list>
+		    	<value>Gzq.hbm.xml</value>
+		    </list>
+		</property>
+		<property name="packagesToScan">
+			<list>
+				<value>mesrk.entity</value>
+				<value>qgg.extjs.entity</value>
+				<value>qgg.gshiro.entity</value>
+			</list>
+		</property>
+	</bean>
+	
+	<bean id="transactionManager"
+		class="org.springframework.orm.hibernate4.HibernateTransactionManager">
+		<property name="sessionFactory" ref="sessionFactory"></property>
+	</bean>
+	
+	<tx:annotation-driven transaction-manager="transactionManager"
+		proxy-target-class="true" />
+		
+	<bean id="filterChainsStr"  class="java.lang.String">
+		<constructor-arg type="java.lang.String">
+			<value>
+			    /static/**=anon
+			    /manager/login=anon
+			    /login.jsp =anon
+			    /manager/indexfull/*=anon
+				/** = authc
+			</value>
+		</constructor-arg>
+	</bean>
+	<import resource="classpath*:/extjs-bean.xml"/>
+	
+	
+</beans>

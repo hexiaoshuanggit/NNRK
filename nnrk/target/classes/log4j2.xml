@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>  
+<configuration status="OFF">  
+  <appenders>  
+    <Console name="Console" target="SYSTEM_OUT">  
+      <PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss} [%t] %-5level %  - %logger{36} - %msg%n"/>  
+    </Console>
+    <RollingFile name="cometfile" fileName="logs/comet.log"
+                 filePattern="log/$${date:yyyy-MM}/app-%d{yyyy-MM-dd}-%i.log.gz">
+        <PatternLayout charset="UTF-8" pattern="%d{HH:mm:ss z} - %msg%n"/>
+        <SizeBasedTriggeringPolicy size="50MB"/>
+    </RollingFile>
+    
+    <RollingFile name="consoleFile" fileName="logs/consoleFile.log"
+                 filePattern="log/$${date:yyyy-MM}/app-%d{yyyy-MM-dd}-%i.log.gz">
+        <PatternLayout charset="UTF-8" pattern="%d{yyyy-MM-dd HH:mm:ss} - %msg%n"/>
+        <SizeBasedTriggeringPolicy size="50MB"/>
+    </RollingFile>
+        
+  </appenders>  
+  <loggers>  
+  <!--
+    <logger name="pss.trace.PssComet" level="info" additivity="true">
+        <appender-ref ref="cometfile"/>
+    </logger>  
+    -->
+    <root level="debug">  
+      <appender-ref ref="Console"/>
+      <appender-ref ref="consoleFile"></appender-ref>  
+    </root> 
+  </loggers>  
+</configuration>

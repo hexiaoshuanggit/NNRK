@@ -1,0 +1,290 @@
+<!DOCTYPE hibernate-mapping PUBLIC  
+"-//Hibernate/Hibernate Mapping DTD 3.0//EN"  
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">  
+<hibernate-mapping>
+    
+    <sql-query name="webinfos">
+       <![CDATA[
+       		select  
+				 t1.ID_ as id, t1.TABLENAME_ as tablename,
+				 t1.COLUMNNAME_ as columnname,t1.DEFAULT_VALUE_ as defaultValue,
+				 t1.TEXT_ as text, t1.GRID_COL_WIDTH_ as gridColWidth,
+				 t1.GRID_COL_RENDERER_ as gridColRenderer
+			from dbo.SYSTEM_WEBINFOS_ t1
+				where 1=1 
+				order by t1.TABLENAME_
+       ]]>
+    </sql-query>
+    
+    <sql-query name="basefieldrefView">
+       <![CDATA[
+       		select 
+			  ID_ as id,COLUMNNAME_ as code
+			  ,COLUMNNAME_ + ' | ' + ISNULL(TEXT_,'') as name 
+			 from SYSTEM_WEBINFOS_ t1 
+			 where 1=1 
+       ]]>
+    </sql-query>
+    
+    
+    <!-- 基础数据 -->
+    <sql-query name="comboxView">
+       <![CDATA[
+       		select  
+				 t1.ID_ as id, t1.CODE_ as code,t1.NAME_ as name
+			from BASE_COMBOX_ENTRY t1
+			    left join BASE_COMBOX t2 on t1.MAIN_ID_=t2.ID_
+				where 1=1 and t1.IS_DELETE_=0 
+				order by t1.LINE_NUM_
+       ]]>
+    </sql-query>
+    
+    <!-- 工作中心下拉框 -->
+    <sql-query name="workCenterView">
+       <![CDATA[
+       		select  
+				 t1.ID_ as id, t1.CODE_ as code,t1.NAME_ as name
+			from BASE_WORKCENTER t1
+			  where 1=1 and t1.IS_DELETE_=0 
+				order by t1.CODE_ asc 
+       ]]>
+    </sql-query>
+    
+    <!-- B品管理 -->
+    <sql-query name="btypeCboView">
+       <![CDATA[
+       		select  
+				 t1.ID_ as id, t1.CODE_ as code,t1.NAME_ as name
+				  , t1.CODE_ + '|' + t1.NAME_ as text
+			from SDHC_BTYPE t1
+			  where 1=1 and t1.IS_DELETE_=0 
+				order by t1.CODE_ asc 
+       ]]>
+    </sql-query>
+    
+    <!-- 工作单元下拉框 -->
+    <sql-query name="workCellView">
+       <![CDATA[
+       		select  
+				 t1.ID_ as id, t1.CODE_ as code,t1.NAME_ as name
+			from BASE_WORKCELL t1
+			  where 1=1 and t1.IS_DELETE_=0 
+				order by t1.NAME_
+       ]]>
+    </sql-query>
+    
+    <!-- 物料分类tree查询 -->
+    <sql-query name="mrlClassTreeView">
+       <![CDATA[
+       		select  
+				 t1.ID_ as id, t1.CODE_ as code,t1.NAME_ as name
+				 ,t1.PID_ as parentId,t1.REMARK_ as remark,'false' as leaf
+				 ,t1.CREATE_TIME_ as createTime,t1.CREATE_USER_ as createUser,t1.UPDATE_TIME_ as updateTime,t1.UPDATE_USER_ as updateUser
+	 			 ,t1.REF1_ as ref1,t1.REF2_ as ref2,t1.REF3_ as ref3,t1.REF4_ as ref4,t1.REF5_ as ref5
+			from BASE_MRL_CLASS t1
+			  where 1=1 and t1.IS_DELETE_=0 
+       ]]>
+    </sql-query>
+    
+    <sql-query name="mrlClassCboView">
+       <![CDATA[
+       		select  
+				 t1.ID_ as id, t1.CODE_ as code,t1.NAME_ as name,
+				 t1.CODE_ + '|' + t1.NAME_ as text
+			from BASE_MRL_CLASS t1
+			  where 1=1 and t1.IS_DELETE_=0 
+			  order by t1.CODE_ 
+        ]]>
+    </sql-query>
+    
+    <sql-query name="baseMeasureView">
+       <![CDATA[
+       		select  
+				 t1.ID_ as id, t1.CODE_ as code,t1.NAME_ as name
+			from BASE_MEASURE t1
+			  where 1=1 and t1.IS_DELETE_=0 
+        ]]>
+    </sql-query>
+    
+    <sql-query name="mrlCboView">
+       <![CDATA[
+       		select  
+				 t1.ID_ as id, t1.CODE_ as code,t1.NAME_ as name,t1.SPECIFICATION_ as spec
+				 ,t1.PRI_MEASURE_ measure
+				 ,(t1.CODE_  + '|'  + t1.NAME_) as text
+			from BASE_MRL t1
+			  where 1=1 and t1.IS_DELETE_=0 
+        ]]>
+    </sql-query>
+    
+    <!-- 工序下拉框 -->
+    <sql-query name="opCboView">
+       <![CDATA[
+       		select  
+				 t1.ID_ as id, t1.CODE_ as code,t1.NAME_ as name,
+				  ISNULL(t1.CODE_, '') + '|' + ISNULL(t1.NAME_, '') as text
+			from BASE_OPERATION_DEF_ t1
+			  where 1=1 and t1.IS_DELETE_=0 
+        ]]>
+    </sql-query>
+    
+    <!-- 工艺路线下拉框 -->
+    <sql-query name="routelineCboView">
+       <![CDATA[
+       		select  
+				 t1.ID_ as id, t1.CODE_ as code,t1.NAME_ as name
+			from  BASE_ROUTE_LINE t1
+			  where 1=1 and t1.IS_DELETE_=0 
+        ]]>
+    </sql-query>
+    
+    <!-- 工艺路线工序下拉框 -->
+    <sql-query name="routeLineOpCboView">
+       <![CDATA[
+       		select  
+				 t1.ID_ as id, t1.OPDEF_ID_ as opdefId,t1.OP_CODE_ as code
+				 ,t1.OP_NAME_ as name,(t1.OP_CODE_ + '|' + t1.OP_NAME_ ) as text
+			from  BASE_ROUTE_OPERATION t1
+			  where 1=1 and t1.IS_DELETE_=0 
+			  order by t1.OP_SEQ_ 
+        ]]>
+    </sql-query>
+    
+    <!-- 物料 工艺路线 下拉框 -->
+    <sql-query name="mrlroutelineCboView">
+       <![CDATA[
+       		select 
+       				t1.ID_ as id,t2.CODE_ as code,t2.NAME_ as name ,t2.ID_ as routlineId
+			  from 
+			BASE_ROUTE_PRODUCT t1 
+			  join BASE_ROUTE_LINE t2 on t1.LINE_ID_=t2.ID_
+			  where 1=1 
+        ]]>
+    </sql-query>
+    
+    <!-- BOM工序下拉框 -->
+    <sql-query name="bomopcboView">
+       <![CDATA[
+       		select  
+				 t1.ID_ as id, t1.DOC_CODE_ as code,t1.DOC_CODE_ as name
+			from  BASE_BOMOP t1
+				where 1=1 and t1.IS_DELETE_=0 and t1.DOC_STATUS_='已审核'
+        ]]>
+    </sql-query>
+    
+    <!-- 设备下拉框 -->
+    <sql-query name="equipmentCboView">
+       <![CDATA[
+       		select 
+			    t1.ID_ as id, t1.CODE_ as code,t1.NAME_ as name ,
+			     ISNULL(t1.CODE_,'') + '|' + ISNULL(t1.NAME_, '') as text
+			 from 
+			 BASE_EQUIPMENT t1
+			 where 1=1  and t1.IS_DELETE_=0 
+        ]]>
+    </sql-query>
+    
+    <!-- 员工下拉框 -->
+    <sql-query name="emplpyeecboView">
+    <![CDATA[
+       		select 
+			   t1.ID_ as id, t1.CODE_ as code,t1.NAME_ as name  
+			 from BASE_EMPLOYEE t1
+			where 1=1  and t1.IS_DELETE_=0 
+        ]]>
+    </sql-query>
+    
+    <!-- 品质人员下拉框 -->
+    <sql-query name="empchkcboView">
+    <![CDATA[
+       		select 
+			   t1.ID_ as id, t1.CODE_ as code,t1.NAME_ as name  
+			 from BASE_EMPLOYEE t1
+			where 1=1  and t1.IS_DELETE_=0 
+			  and t1.DEPT_ID_='1839'
+        ]]>
+    </sql-query>
+    
+    <sql-query name="usercboView">
+    <![CDATA[
+       		select 
+			   t1.ID_ as id, t1.USER_CODE_ as code,t1.USER_NAME_ as name  
+			 from QGG_USER t1
+			where 1=1 
+        ]]>
+    </sql-query>
+    
+    <!-- 供应商下拉框 -->
+    <sql-query name="suppliercboView">
+    <![CDATA[
+       		select 
+			   t1.ID_ as id, t1.CODE_ as code,t1.FULL_NAME_ as name  
+			 from  BASE_SUPPLIER t1
+			where 1=1  and t1.IS_DELETE_=0 
+        ]]>
+    </sql-query>
+    
+    <!-- 客户下拉框 -->
+    <sql-query name="customercboView">
+    <![CDATA[
+       		select 
+			   t1.ID_ as id, t1.CODE_ as code,t1.FULL_NAME_ as name  
+			 from  BASE_CUSTOMER t1
+			where 1=1  and t1.IS_DELETE_=0 
+        ]]>
+    </sql-query>
+    
+    <!-- 仓库下拉框 -->
+    <sql-query name="warehousecboView">
+    <![CDATA[
+       		select 
+			   t1.ID_ as id, t1.CODE_ as code,t1.NAME_ as name  
+			 from  BASE_WARE_ t1
+			where 1=1  and t1.IS_DELETE_=0 and t1.STATUS_='启用'
+        ]]>
+    </sql-query>
+    
+    <!-- 库位下拉框 -->
+    <sql-query name="warelocationcboView">
+    <![CDATA[
+       		select 
+			   t1.ID_ as id, t1.CODE_ as code,t1.NAME_ as name 
+			 from BASE_WARELOCATION_ t1
+			where 1=1  and t1.IS_DELETE_=0 and t1.STATUS_='启用' 
+        ]]>
+    </sql-query>
+    
+    <!-- 部门下拉框 -->
+    <sql-query name="deptCboView">
+    <![CDATA[
+       		select 
+			   t1.ID_ as id, t1.CODE_ as code,t1.NAME_ as name 
+			 from BASE_DEPT t1
+			where 1=1  and t1.IS_DELETE_=0 
+        ]]>
+    </sql-query>
+    
+    <!-- business -->
+    
+    <sql-query name="dispatchSuppleMrlSelectVO">
+    <![CDATA[
+       		select 
+			  t1.ID_ as id,t1.MRL_ID_ as mrlId,t1.MRL_CODE_ as mrlCode
+			  ,t1.MRL_NAME_ as mrlName,t1.MRL_SPEC_ as mrlSpec,t1.MRL_MEASURE_ as mrlMeasure
+			  ,t1.MRL_QTY_ as mrlQty,t1.ACT_QTY_	as actQty
+				,t2.ID_ as dispatchId,t2.DOC_CODE_ as dispatchCode,t2.SOURCE_DOCNO_ as makingCode
+			 from SDHC_DISPATCH_ORDER_MRL_ t1
+			 join SDHC_DISPATCH_ORDER t2 on t1.MAIN_ID_=t2.ID_
+			 where 1=1 and t2.DOC_STATUS_='已审核' and t2.STATE_<>'完工' 
+       		
+        ]]>
+    </sql-query>
+    
+    <sql-query name="basebarcodeLockView">
+    <![CDATA[
+       		select * from V_BARCODE_LOCK  t1 where 1=1 
+        ]]>
+    </sql-query>
+    
+    
+</hibernate-mapping>  
